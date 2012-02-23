@@ -1,3 +1,5 @@
+# file is managed by puppet
+
 server {
         listen   <%= listen %> ;
 
@@ -19,7 +21,6 @@ server {
         ssl_prefer_server_ciphers   on;
 <% end -%>
         location / {
-		index   <%= index %>;
         }
 
 	location ~ \.php$ {
