@@ -4,8 +4,8 @@ user <%= nginx_user %>;
 worker_processes <%= processorcount %>;
 worker_rlimit_nofile <%= worker_rlimit_nofile %>;
 
-syslog daemon nginx;
-error_log syslog:error;
+syslog     daemon nginx;
+error_log  syslog:error;
 pid        /var/run/nginx.pid;
 
 events {
@@ -13,17 +13,33 @@ events {
 }
 
 http {
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    server_tokens off;
+
+    # server_names_hash_bucket_size 64;
+    # server_name_in_redirect off;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+	access_log syslog:info main;
 	log_format  main  '$server_name $remote_addr - $remote_user $request '
 		'"$status" $body_bytes_sent "$http_referer" '
 		'"$http_user_agent" "$http_x_forwarded_for"';
 
-    include       /etc/nginx/mime.types;
+    gzip on;
+    gzip_disable "msie6";
 
-	access_log syslog:info main;
-    sendfile        on;
-    server_tokens off;
-    keepalive_timeout  20;
-    tcp_nodelay        on;
+    # gzip_vary on;
+    # gzip_proxied any;
+    # gzip_comp_level 6;
+    # gzip_buffers 16 8k;
+    # gzip_http_version 1.1;
+    # gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
