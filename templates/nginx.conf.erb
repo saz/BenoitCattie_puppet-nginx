@@ -26,10 +26,10 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
-	access_log syslog:info main;
-	log_format  main  '$server_name $remote_addr - $remote_user $request '
-		'"$status" $body_bytes_sent "$http_referer" '
-		'"$http_user_agent" "$http_x_forwarded_for"';
+    log_format  main  '$server_name $remote_addr - $remote_user $request '
+        '"$status" $body_bytes_sent "$http_referer" '
+        '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log syslog:info main;
 
     gzip on;
     gzip_disable "msie6";
