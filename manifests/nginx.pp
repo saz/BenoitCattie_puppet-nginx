@@ -1,40 +1,40 @@
-class nginx ($ensure = present, $nginx_user = 'www-data', $worker_connections = 8192, $worker_rlimit_nofile = 131072) {
+class nginx ($ensure = present, $nginx_user = 'www-data', $worker_connections = 8192, $worker_rlimit_nofile = 131072, $keepalive_timeout = 20) {
 
 	package { "nginx": ensure => $ensure }
 
 	service { "nginx":
-        ensure 		=> $ensure ? {
-			present => running,
-			absent  => stopped,
-		},
-        enable 		=> true,
-		hasrestart 	=> true,
-		require 	=> File["/etc/nginx/nginx.conf"],
-	}
+    ensure 		=> $ensure ? {
+      present => running,
+      absent  => stopped,
+    },
+    enable 		=> true,
+    hasrestart 	=> true,
+    require 	=> File["/etc/nginx/nginx.conf"],
+  }
 
-    file { "/etc/nginx/nginx.conf":
-		ensure 	=> $ensure,
-		mode 	=> 644,
-		owner 	=> root,
-		group 	=> root,
-		content => template("nginx/nginx.conf.erb"),
-		notify 	=> Service["nginx"],
-		require => Package["nginx"],
-    }
+  file { "/etc/nginx/nginx.conf":
+    ensure 	=> $ensure,
+    mode 	=> 644,
+    owner 	=> root,
+    group 	=> root,
+    content => template("nginx/nginx.conf.erb"),
+    notify 	=> Service["nginx"],
+    require => Package["nginx"],
+  }
 
-	file { "/etc/nginx/conf.d":
-		ensure 	=> $ensure ? {
-			present => directory,
-			absent  => absent,
-		},
-		recurse	=> true,
-		purge	=> true,
-		force	=> true,
-		mode	=> 644, 
-		owner 	=> root, 
-		group 	=> root,
-		require => Package["nginx"],
-	}
+  file { "/etc/nginx/conf.d":
+    ensure 	=> $ensure ? {
+      present => directory,
+      absent  => absent,
+    },
+    recurse	=> true,
+    purge	=> true,
+    force	=> true,
+    mode	=> 644, 
+    owner 	=> root, 
+    group 	=> root,
+    require => Package["nginx"],
+  }
 
 	file { "/etc/nginx/ssl":
 		ensure 	=> $ensure ? {
