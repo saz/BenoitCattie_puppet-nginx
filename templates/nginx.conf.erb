@@ -28,8 +28,10 @@ http {
 
     log_format  main  '$server_name $remote_addr - $remote_user $request '
         '"$status" $body_bytes_sent "$http_referer" '
-        '"$http_user_agent" "$http_x_forwarded_for"';
-    access_log syslog:info main;
+		'"$http_user_agent" "$http_x_forwarded_for"';
+
+	#access_log syslog:info main;
+	access_log off;
 
     #gzip on;
     #gzip_disable "msie6";
